@@ -23,9 +23,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest playwright
+          pip install deepeval
+          pip install pytest pytest-html playwright
           python -m playwright install --with-deps chromium
+          
 
       - name: Run tests
         run: |
-          pytest -q playwright_sample_test.py
+          mkdir -p reports
+          pytest -q playwright_sample_test.py --html=reports/playwright-report.html --self-contained-html
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: reports/playwright-report.html
